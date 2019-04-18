@@ -9,9 +9,10 @@ package istorage
 
 // Record s.e.
 type Record struct {
-	ID    int64
-	Type  int32
-	Parts []*Part
+	WorkspaceD int64
+	ID         int64
+	Type       int32
+	Parts      []*Part
 }
 
 // Part of the record
