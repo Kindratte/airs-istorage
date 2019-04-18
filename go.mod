@@ -1,4 +1,4 @@
-module github.com/untillpro/goonce-istorage
+module github.com/untillpro/airs-istorage
 
 go 1.12
 
