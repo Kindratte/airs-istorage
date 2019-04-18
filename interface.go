@@ -23,4 +23,4 @@ var Get func(ctx context.Context, workspaceID int64, recordType int32, ID int64,
 var GetAll func(ctx context.Context, wsID int64, recordType int32, partTypes []int32) (chan *Record, error)
 
 // WipeWorkspace removes all records in workspace
-var WipeWorkspace func(ctx context.Context, wsID int64)
+var WipeWorkspace func(ctx context.Context, wsID int64) error
