@@ -1,4 +1,4 @@
 # istorage
 
-- Data persistency
+- Data persistency interface
 - Idea borrowed from Project Kaiser storage

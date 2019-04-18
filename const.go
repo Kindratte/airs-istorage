@@ -8,4 +8,4 @@
 package istorage
 
 // DefaultPart denotes default part of the record
-const DefaultPart = PartType(0)
+const DefaultPart = 0

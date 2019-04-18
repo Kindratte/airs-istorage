@@ -16,12 +16,9 @@ type Record struct {
 	Parts []*Part
 }
 
-// PartType defines type of the record part
-type PartType int32
-
 // Part of the record
 type Part struct {
-	Type PartType
+	Type int32
 
 	// 0-active, 1-closed, 2-deleted/moved
 	State int32
@@ -31,9 +28,9 @@ type Part struct {
 	Value []byte
 }
 
-// GetPart part by type of nil if part not found
+// GetPart returns part by type or nil if part not found
 // For speed consideration ref. https://www.darkcoding.net/software/go-slice-search-vs-map-lookup/
-func (r *Record) GetPart(partType PartType) *Part {
+func (r *Record) GetPart(partType int32) *Part {
 	for _, part := range r.Parts {
 		if part.Type == partType {
 			return part

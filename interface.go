@@ -14,9 +14,9 @@ var PutBatch func(ctx context.Context, wsID int64, rtype RecordType, batch chan 
 
 // Get returns a record, nil if not found
 // If partTypes is empty all parts are returned
-var Get func(ctx context.Context, wsID int64, recordType RecordType, ID int64, partTypes []PartType) (*Record, error)
+var Get func(ctx context.Context, wsID int64, recordType RecordType, ID int64, partTypes []int32) (*Record, error)
 
 // GetAll returns all records of the given type
 // GetAll must analyze ctx.Done
 // If partType is empty all parts are returned
-var GetAll func(ctx context.Context, wsID int64, recordType RecordType, partTypes []PartType) (chan *Record, error)
+var GetAll func(ctx context.Context, wsID int64, recordType RecordType, partTypes []int32) (chan *Record, error)
