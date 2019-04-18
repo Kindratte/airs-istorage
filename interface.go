@@ -10,13 +10,13 @@ package istorage
 import "context"
 
 // PutBatch puts record in transaction
-var PutBatch func(ctx context.Context, wsID int64, rtype RecordType, batch chan *Record) error
+var PutBatch func(ctx context.Context, wsID int64, batch []*Record) error
 
 // Get returns a record, nil if not found
 // If partTypes is empty all parts are returned
-var Get func(ctx context.Context, wsID int64, recordType RecordType, ID int64, partTypes []int32) (*Record, error)
+var Get func(ctx context.Context, wsID int64, recordType int32, ID int64, partTypes []int32) (*Record, error)
 
 // GetAll returns all records of the given type
 // GetAll must analyze ctx.Done
 // If partType is empty all parts are returned
-var GetAll func(ctx context.Context, wsID int64, recordType RecordType, partTypes []int32) (chan *Record, error)
+var GetAll func(ctx context.Context, wsID int64, recordType int32, partTypes []int32) (chan *Record, error)

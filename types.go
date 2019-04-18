@@ -7,12 +7,10 @@
 
 package istorage
 
-// RecordType defines record type
-type RecordType int32
-
 // Record s.e.
 type Record struct {
 	ID    int64
+	Type  int32
 	Parts []*Part
 }
 
