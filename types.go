@@ -10,14 +10,14 @@ package istorage
 // Record s.e.
 type Record struct {
 	WorkspaceID int64
+	RecordType  int32
 	ID          int64
-	Type        int32
 	Parts       []*Part
 }
 
 // Part of the record
 type Part struct {
-	Type int32
+	PartType int32
 
 	// 0-active, 1-closed, 2-deleted/moved
 	State int32
@@ -31,7 +31,7 @@ type Part struct {
 // For speed consideration ref. https://www.darkcoding.net/software/go-slice-search-vs-map-lookup/
 func (r *Record) GetPart(partType int32) *Part {
 	for _, part := range r.Parts {
-		if part.Type == partType {
+		if part.PartType == partType {
 			return part
 		}
 	}

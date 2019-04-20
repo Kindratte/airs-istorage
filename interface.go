@@ -21,4 +21,5 @@ var GetByID func(ctx context.Context, workspaceID int64, recordType int32, ID in
 // If useID is true result is filtered by ID
 // If partType is not empty result is filtered by partTypes
 // GetAll must analyze ctx.Done
-var Get func(ctx context.Context, workspaceID int64, recordType int32, useID bool, ID int64, partTypes []int32) (chan *Record, error)
+// *error will be valid when chan is closed
+var Get func(ctx context.Context, workspaceID int64, recordType int32, useID bool, ID int64, partTypes []int32) (chan *Record, *error)
