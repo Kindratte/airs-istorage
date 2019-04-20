@@ -40,7 +40,6 @@ type Part struct {
 }
 
 // GetPart returns part by type or nil if part not found
-// For speed consideration ref. https://www.darkcoding.net/software/go-slice-search-vs-map-lookup/
 func (r *RecordParts) GetPart(partType int32) *Part {
 	for _, part := range r.Parts {
 		if part.PartType == partType {
