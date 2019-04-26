@@ -1,6 +1,6 @@
 # istorage
 
-- Data persistency interface.
+- Simple key-value persistency interface
 - Idea borrowed from Project Kaiser storage
 
 
@@ -14,8 +14,9 @@ struct (not to mention accessing data behind a pointer involves an indirection, 
 	there can be additional cost.
 
 ```
-BenchmarkChanPointer-4   	 3000000	       478 ns/op	      80 B/op	       2 allocs/op
-BenchmarkChanValue-4   	 3000000	       401 ns/op	      48 B/op	       1 allocs/op
+BenchmarkChanValue-4              	 3000000	       445 ns/op	      48 B/op	       1 allocs/op
+BenchmarkChanValueFromPointer-4   	 3000000	       438 ns/op	      48 B/op	       1 allocs/op
+BenchmarkChanPointer-4            	 3000000	       480 ns/op	      80 B/op	       2 allocs/op
 ```
 
 # Slice or Map
