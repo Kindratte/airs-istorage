@@ -14,9 +14,10 @@ struct (not to mention accessing data behind a pointer involves an indirection, 
 	there can be additional cost.
 
 ```
-BenchmarkChanValue-4              	 3000000	       445 ns/op	      48 B/op	       1 allocs/op
-BenchmarkChanValueFromPointer-4   	 3000000	       438 ns/op	      48 B/op	       1 allocs/op
-BenchmarkChanPointer-4            	 3000000	       480 ns/op	      80 B/op	       2 allocs/op
+BenchmarkChanInterface-4          	 3000000	       428 ns/op	      64 B/op	       1 allocs/op
+BenchmarkChanValue-4              	 5000000	       297 ns/op	       0 B/op	       0 allocs/op
+BenchmarkChanValueFromPointer-4   	 5000000	       301 ns/op	       0 B/op	       0 allocs/op
+BenchmarkChanPointer-4            	 5000000	       395 ns/op	      64 B/op	       1 allocs/op
 ```
 
 # Slice or Map

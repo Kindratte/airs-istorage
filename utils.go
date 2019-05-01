@@ -16,6 +16,19 @@ func ToSlice(records chan Record, perr *error) ([]Record, error) {
 	return res, *perr
 }
 
+// Records returned by ToRecords
+type Records []Record
+
+// GetPart returns part by type or nil if part not found
+func (rr Records) GetPart(partType int32) *Record {
+	for _, r := range rr {
+		if r.PartType == partType {
+			return &r
+		}
+	}
+	return nil
+}
+
 // RecordPartsFromRecords convert channels. Input channel must be sorted by ID
 //func RecordPartsFromRecords(records chan Record, perr *error) (chan RecordParts, *error) {
 /*

@@ -11,19 +11,42 @@ import (
 	"testing"
 )
 
-func BenchmarkChanValue(b *testing.B) {
-	c := make(chan RecordParts)
+func BenchmarkChanInterface(b *testing.B) {
+	c := make(chan interface{})
 	done := make(chan string)
 
+	var sum int64
 	go func() {
-		for range c {
+		var rp Record
+		for rpr := range c {
+			rp = rpr.(Record)
+			sum += rp.ID
 		}
 		done <- "bye"
 	}()
 
 	for n := 0; n < b.N; n++ {
-		r := RecordParts{ID: 0}
-		r.Parts = append(r.Parts, Part{PartType: 0, State: 1, Offset: 2})
+		r := Record{ID: 0, PartType: 0, State: 1, Offset: 2}
+		c <- r
+	}
+	close(c)
+	<-done
+}
+
+func BenchmarkChanValue(b *testing.B) {
+	c := make(chan Record)
+	done := make(chan string)
+
+	var sum int64
+	go func() {
+		for rp := range c {
+			sum += rp.ID
+		}
+		done <- "bye"
+	}()
+
+	for n := 0; n < b.N; n++ {
+		r := Record{ID: 0, PartType: 0, State: 1, Offset: 2}
 		c <- r
 	}
 	close(c)
@@ -31,19 +54,19 @@ func BenchmarkChanValue(b *testing.B) {
 }
 
 func BenchmarkChanValueFromPointer(b *testing.B) {
-	c := make(chan RecordParts)
+	c := make(chan Record)
 	done := make(chan string)
+	var sum int64
 
 	go func() {
-		for range c {
+		for rp := range c {
+			sum += rp.ID
 		}
 		done <- "bye"
 	}()
 
 	for n := 0; n < b.N; n++ {
-		r := new(RecordParts)
-		r.ID = 0
-		r.Parts = append(r.Parts, Part{PartType: 0, State: 1, Offset: 2})
+		r := &Record{ID: 0, PartType: 0, State: 1, Offset: 2}
 		c <- *r
 	}
 	close(c)
@@ -51,19 +74,19 @@ func BenchmarkChanValueFromPointer(b *testing.B) {
 }
 
 func BenchmarkChanPointer(b *testing.B) {
-	c := make(chan *RecordParts)
+	c := make(chan *Record)
 	done := make(chan string)
+	var sum int64
 
 	go func() {
-		for range c {
+		for rp := range c {
+			sum += rp.ID
 		}
 		done <- "bye"
 	}()
 
 	for n := 0; n < b.N; n++ {
-		r := new(RecordParts)
-		r.ID = 0
-		r.Parts = append(r.Parts, Part{PartType: 0, State: 1, Offset: 2})
+		r := &Record{ID: 0, PartType: 0, State: 1, Offset: 2}
 		c <- r
 	}
 	close(c)

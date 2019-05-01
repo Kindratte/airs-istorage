@@ -12,11 +12,11 @@ import "context"
 // Put puts records in transaction
 var Put func(ctx context.Context, workspaceID int64, batch []Record) error
 
-/*Get returns records with given workspaceID and recordType
-- Result must be sorted by workspaceID, recordType, PartType, ID
-- If partType is not empty result is filtered by partTypes
+/*Get returns channel for records with given workspaceID and recordType
+- res buffer length must be zero
+- res must be sorted by workspaceID, recordType, ID, PartType
 - If ID is not nil result is filtered by ID
-- Get must analyze ctx.Done
-- *error will be valid when chan is closed
+- Get must analyze ctx.Err AFTER each write to channel
+- *perr will be valid when chan is closed
 */
-var Get func(ctx context.Context, workspaceID int64, recordType int32, partTypes []int32, ID *int64) (chan Record, *error)
+var Get func(ctx context.Context, workspaceID int64, recordType int32, ID *int64) (res chan Record, perr *error)

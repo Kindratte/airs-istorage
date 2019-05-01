@@ -7,12 +7,6 @@
 
 package istorage
 
-// RecordParts returned by Get
-type RecordParts struct {
-	ID    int64
-	Parts []Part
-}
-
 // Record used by Put
 type Record struct {
 	RecordType int32
@@ -39,12 +33,3 @@ type Part struct {
 	Value []byte
 }
 
-// GetPart returns part by type or nil if part not found
-func (r *RecordParts) GetPart(partType int32) *Part {
-	for _, part := range r.Parts {
-		if part.PartType == partType {
-			return &part
-		}
-	}
-	return nil
-}
