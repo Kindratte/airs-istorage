@@ -29,56 +29,33 @@ func (rr Records) GetPart(partType int32) *Record {
 	return nil
 }
 
-// RecordPartsFromRecords convert channels. Input channel must be sorted by ID
-//func RecordPartsFromRecords(records chan Record, perr *error) (chan RecordParts, *error) {
-/*
+// ToRecords s.e.
+func ToRecords(records chan Record) chan Records {
 
-	session := getSession(ctx)
-
-	iter := session.Query(getQueryText(workspaceID, recordType, useID, ID, partTypes)).Iter()
-	res := make(chan istorage.RecordParts)
-	var resError error
+	res := make(chan Records)
 
 	go func() {
-		var curRec *istorage.RecordParts
-		var curPart = new(istorage.Part)
-		var ID int64
-		for iter.Scan(&ID, &curPart.PartType, &curPart.State, &curPart.Offset, &curPart.Value) {
+		var curSlice Records
+		for r := range records {
 
-			// Check if we has to exit
-			if nil != ctx.Err() {
-				resError = ctx.Err()
-				close(res)
-				break
-			}
-
-			isNewRec := nil == curRec
+			isNewRec := nil == curSlice
 			if !isNewRec {
-				isNewRec = curRec.ID != ID
+				isNewRec = !(curSlice[0].ID == r.ID && curSlice[0].RecordType == r.RecordType)
 			}
 
-			// Send curRec
+			// Send curSlice
 			if isNewRec {
-				if curRec != nil {
-					res <- *curRec
-					curRec.ID = ID
+				if curSlice != nil {
+					res <- curSlice
+					curSlice = nil
 				}
-				// curRec = istorage.RecordParts{ID: dbrec.ID}
-				curRec = new(istorage.RecordParts)
-				curRec.ID = ID
 			}
-			curRec.Parts = append(curRec.Parts, istorage.Part{PartType: curPart.PartType, State: curPart.State, Offset: curPart.Offset, Value: curPart.Value})
-			curPart = new(istorage.Part)
+			curSlice = append(curSlice, r)
 		}
-		if curRec != nil {
-			res <- *curRec
+		if curSlice != nil {
+			res <- curSlice
 		}
-		resError = iter.Close()
 		close(res)
 	}()
-
-	return res, &resError
-
-*/
-//	return nil, perr
-//}
+	return res
+}

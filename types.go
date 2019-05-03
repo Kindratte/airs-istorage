@@ -20,16 +20,3 @@ type Record struct {
 	// Default value
 	Value []byte
 }
-
-// Part of the record
-type Part struct {
-	PartType int32
-
-	// 0-active, 1-closed, 2-deleted/moved
-	State int32
-
-	Offset int64
-	// Default value
-	Value []byte
-}
-
