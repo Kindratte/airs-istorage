@@ -19,11 +19,22 @@ func ToSlice(records chan Record, perr *error) ([]Record, error) {
 // Records returned by ToRecords
 type Records []Record
 
-// GetPart returns part by type or nil if part not found
+// GetPart returns first part by type or nil if part not found
 func (rr Records) GetPart(partType int32) *Record {
 	for _, r := range rr {
 		if r.PartType == partType {
 			return &r
+		}
+	}
+	return nil
+}
+
+// GetParts returns all parts by type or nil if part not found
+func (rr Records) GetParts(partType int32) []Record {
+	var res []Record
+	for _, r := range rr {
+		if r.PartType == partType {
+			res = append(res, r)
 		}
 	}
 	return nil

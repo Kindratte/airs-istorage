@@ -12,11 +12,13 @@ type Record struct {
 	RecordType int32
 	ID         int64
 	PartType   int32
+	PartID     int64
 
 	// 0-active, 1-closed, 2-deleted/moved
 	State int32
 
+	// Offset of the event which affected the value
 	Offset int64
-	// Default value
+
 	Value []byte
 }
