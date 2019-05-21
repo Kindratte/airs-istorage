@@ -21,4 +21,4 @@ var Put func(ctx context.Context, workspaceID int64, batch []Record) error
 - Get must analyze ctx.Err AFTER each write to channel
 - *perr will be valid when chan is closed
 */
-var Get func(ctx context.Context, workspaceID int64, recordType int32, ID int64, partTypes []int32) (res chan Record, perr *error)
+var Get func(ctx context.Context, workspaceID int64, recordType int32, ID *int64) (res chan Record, perr *error)

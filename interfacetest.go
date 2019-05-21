@@ -66,17 +66,17 @@ func testBasicUsage(t *testing.T) {
 
 	// Fetch them all
 
-	actual, err := ToSlice(Get(ctx, WsID, 2, 0, nil))
+	actual, err := ToSlice(Get(ctx, WsID, 2, nil))
 	require.Nil(t, err, "Get error")
 	assert.True(t, reflect.DeepEqual(source1, actual), "Expected %#v actual %#v", source1, actual)
 
 	// Fetch by PartType, ID
 
-	actual, err = ToSlice(Get(ctx, WsID, 2, 3, nil))
+	actual, err = ToSlice(Get(ctx, WsID, 2, pid(3)))
 	require.Nil(t, err, "Get error")
 	assert.True(t, reflect.DeepEqual(source1[0:1], actual), "Expected %#v actual %#v", source1[0:1], actual)
 
-	actual, err = ToSlice(Get(ctx, WsID, 2, 13, nil))
+	actual, err = ToSlice(Get(ctx, WsID, 2, pid(13)))
 	require.Nil(t, err, "Get error")
 	assert.True(t, reflect.DeepEqual(source1[1:3], actual), "Expected %#v actual %#v", source1[1:3], actual)
 
@@ -101,7 +101,7 @@ func testOrder(t *testing.T) {
 
 	// Test
 
-	actual, err := ToSlice(Get(ctx, WsID, 102, 0, nil))
+	actual, err := ToSlice(Get(ctx, WsID, 102, nil))
 	require.Nil(t, err, "Get error")
 	assert.True(t, reflect.DeepEqual(source2, actual), "Expected %#v actual %#v", source2, actual)
 
@@ -112,13 +112,13 @@ func testRecordTypeFiltering(t *testing.T) {
 
 	require.Nil(t, Put(ctx, WsID, source3))
 	{
-		actual, err := ToSlice(Get(ctx, WsID, 202, 0, nil))
+		actual, err := ToSlice(Get(ctx, WsID, 202, nil))
 		require.Nil(t, err, "Get error")
 		expected := source3[0:1]
 		assert.True(t, reflect.DeepEqual(expected, actual), "Expected %#v actual %#v", expected, actual)
 	}
 	{
-		actual, err := ToSlice(Get(ctx, WsID, 201, 0, nil))
+		actual, err := ToSlice(Get(ctx, WsID, 201, nil))
 		require.Nil(t, err, "Get error")
 		expected := source3[1:3]
 		assert.True(t, reflect.DeepEqual(expected, actual), "Expected %#v actual %#v", expected, actual)
@@ -133,19 +133,19 @@ func testWsFiltering(t *testing.T) {
 	require.Nil(t, Put(ctx, WsID+2, source3))
 
 	{
-		actual, err := ToSlice(Get(ctx, WsID, 2, 0, nil))
+		actual, err := ToSlice(Get(ctx, WsID, 2, nil))
 		require.Nil(t, err, "Get error")
 		expected := source1
 		assert.True(t, reflect.DeepEqual(expected, actual), "Expected %#v actual %#v", expected, actual)
 	}
 	{
-		actual, err := ToSlice(Get(ctx, WsID+1, 102, 0, nil))
+		actual, err := ToSlice(Get(ctx, WsID+1, 102, nil))
 		require.Nil(t, err, "Get error")
 		expected := source2
 		assert.True(t, reflect.DeepEqual(expected, actual), "Expected %#v actual %#v", expected, actual)
 	}
 	{
-		actual, err := ToSlice(Get(ctx, WsID+2, 201, 0, nil))
+		actual, err := ToSlice(Get(ctx, WsID+2, 201, nil))
 		require.Nil(t, err, "Get error")
 		expected := source3[1:3]
 		assert.True(t, reflect.DeepEqual(expected, actual), "Expected %#v actual %#v", expected, actual)
@@ -162,7 +162,7 @@ func testCancelByErr(t *testing.T) {
 
 	require.Nil(t, Put(ctxCancel, WsID, source1))
 
-	c, perr := Get(ctxCancel, WsID, 2, 0, nil)
+	c, perr := Get(ctxCancel, WsID, 2, nil)
 
 	var actual []Record
 	actual = append(actual, <-c)
