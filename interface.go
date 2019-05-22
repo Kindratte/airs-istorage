@@ -15,10 +15,9 @@ var Put func(ctx context.Context, workspaceID int64, batch []Record) error
 /*Get returns channel for records with given workspaceID and recordType
 - res buffer length must be zero
 - res must be sorted by workspaceID, recordType, ID, PartType
-- If ID is not 0 result is filtered by ID
-  - Thus 0 is prohibited as ID value
-- If ID is not 0 and partTypes is not empty result is filtered by ID and partTypes
+- If IDs is not empty result is filtered by IDs
+- If IDs is not empty and partTypes is not empty result is filtered by IDs and partTypes
 - Get must analyze ctx.Err AFTER each write to channel
 - *perr will be valid when chan is closed
 */
-var Get func(ctx context.Context, workspaceID int64, recordType int32, ID *int64) (res chan Record, perr *error)
+var Get func(ctx context.Context, workspaceID int64, recordType int32, IDs []int64, partTypes []int32) (res <-chan Record, perr *error)

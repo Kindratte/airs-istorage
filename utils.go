@@ -8,7 +8,7 @@
 package istorage
 
 // ToSlice converts chan Record to []Record
-func ToSlice(records chan Record, perr *error) ([]Record, error) {
+func ToSlice(records <-chan Record, perr *error) ([]Record, error) {
 	var res []Record
 	for r := range records {
 		res = append(res, r)
