@@ -44,8 +44,8 @@ func TestImpl(actx context.Context, t *testing.T) {
 
 	t.Run("TestBasicUsage", testBasicUsage)
 	t.Run("TestOrder", testOrder)
-	t.Run("TestRecordTypeFiltering", testRecordTypeFiltering)
-	t.Run("TestWsFiltering", testWsFiltering)
+	t.Run("TestRecordTypeFiltering", testFilteringRecordType)
+	t.Run("TestWsFiltering", testFilteringWs)
 	t.Run("TestCancelByErr", testCancelByErr)
 
 }
@@ -115,7 +115,7 @@ func testOrder(t *testing.T) {
 
 }
 
-func testRecordTypeFiltering(t *testing.T) {
+func testFilteringRecordType(t *testing.T) {
 	const WsID = 3
 
 	require.Nil(t, Put(ctx, WsID, source3))
@@ -133,7 +133,7 @@ func testRecordTypeFiltering(t *testing.T) {
 	}
 }
 
-func testWsFiltering(t *testing.T) {
+func testFilteringWs(t *testing.T) {
 	const WsID = 4
 
 	require.Nil(t, Put(ctx, WsID, source1))
