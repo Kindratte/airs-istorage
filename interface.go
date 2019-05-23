@@ -14,7 +14,7 @@ var Put func(ctx context.Context, workspaceID int64, batch []Record) error
 
 /*Get returns channel for records with given workspaceID and recordType
 - res buffer length must be zero
-- res must be sorted by workspaceID, recordType, ID, PartType
+- res must be sorted by ID, PartType
 - If IDs is not empty result is filtered by IDs
 - If IDs is not empty and partTypes is not empty result is filtered by IDs and partTypes
 - Get must analyze ctx.Err AFTER each write to channel

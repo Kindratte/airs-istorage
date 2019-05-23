@@ -105,13 +105,23 @@ func testBasicUsage(t *testing.T) {
 	require.Nil(t, err, "Get error")
 	assert.True(t, reflect.DeepEqual(source1, actual), "Expected %#v actual %#v", source1, actual)
 
-	// Fetch by ID and PartType
+	// Fetch by ID
 
-	actual, err = ToSlice(Get(ctx, WsID, 2, ids(3), nil))
+	actual, err = ToSlice(Get(ctx, WsID, 2, []int64{3}, nil))
 	require.Nil(t, err, "Get error")
 	assert.True(t, reflect.DeepEqual(source1[0:1], actual), "Expected %#v actual %#v", source1[0:1], actual)
 
-	actual, err = ToSlice(Get(ctx, WsID, 2, ids(13), nil))
+	actual, err = ToSlice(Get(ctx, WsID, 2, []int64{13}, nil))
+	require.Nil(t, err, "Get error")
+	assert.True(t, reflect.DeepEqual(source1[1:3], actual), "Expected %#v actual %#v", source1[1:3], actual)
+
+	// Fetch by ID and PartType
+
+	actual, err = ToSlice(Get(ctx, WsID, 2, []int64{13}, []int32{24}))
+	require.Nil(t, err, "Get error")
+	assert.True(t, reflect.DeepEqual(source1[2:3], actual), "Expected %#v actual %#v", source1[2:3], actual)
+
+	actual, err = ToSlice(Get(ctx, WsID, 2, []int64{13}, []int32{24, 4}))
 	require.Nil(t, err, "Get error")
 	assert.True(t, reflect.DeepEqual(source1[1:3], actual), "Expected %#v actual %#v", source1[1:3], actual)
 
@@ -173,6 +183,9 @@ func testFilteringRecordType(t *testing.T) {
 		expected := source3[1:3]
 		assert.True(t, reflect.DeepEqual(expected, actual), "Expected %#v actual %#v", expected, actual)
 	}
+}
+
+func testFilteringID(t *testing.T) {
 }
 
 func testFilteringWs(t *testing.T) {
