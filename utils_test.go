@@ -38,6 +38,28 @@ func Test_GetPart(t *testing.T) {
 
 }
 
+func Test_GetParts(t *testing.T) {
+
+	var r1 Records
+	r1 = append(r1, Record{State: 12, PartType: 1})
+	r1 = append(r1, Record{State: 14, PartType: 4})
+	r1 = append(r1, Record{State: 15, PartType: 5})
+	r1 = append(r1, Record{State: 11, PartType: 1})
+
+	parts := r1.GetParts(4)
+	assert.Equal(t, 1, len(parts))
+	assert.Equal(t, int32(14), parts[0].State)
+
+	parts = r1.GetParts(5)
+	assert.Equal(t, 1, len(parts))
+	assert.Equal(t, int32(15), parts[0].State)
+
+	parts = r1.GetParts(1)
+	assert.Equal(t, 2, len(parts))
+	assert.Equal(t, int32(12), parts[0].State)
+	assert.Equal(t, int32(11), parts[1].State)
+}
+
 func Test_ToRecords(t *testing.T) {
 
 	// Empty channel

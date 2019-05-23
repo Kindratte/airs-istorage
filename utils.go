@@ -37,7 +37,7 @@ func (rr Records) GetParts(partType int32) []Record {
 			res = append(res, r)
 		}
 	}
-	return nil
+	return res
 }
 
 // ToRecords s.e.

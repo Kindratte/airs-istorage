@@ -18,22 +18,41 @@ import (
 
 var ctx context.Context
 
+// Same record type, two IDs, second has two parts
 var source1 = []Record{
-	{RecordType: 2, PartType: 4, ID: 3, State: 5, Offset: 6, Value: []byte{7, 8, 9}},
-	{RecordType: 2, PartType: 4, ID: 13, State: 15, Offset: 16, Value: []byte{17, 18, 19}},
-	{RecordType: 2, PartType: 24, ID: 13, State: 25, Offset: 26, Value: []byte{27, 28, 29}},
+	{RecordType: 2, ID: 3, PartType: 4, State: 5, Offset: 6, Value: []byte{7, 8, 9}},
+	{RecordType: 2, ID: 13, PartType: 4, State: 15, Offset: 16, Value: []byte{17, 18, 19}},
+	{RecordType: 2, ID: 13, PartType: 24, State: 25, Offset: 26, Value: []byte{27, 28, 29}},
 }
 
+// Same as source1
 var source2 = []Record{
-	{RecordType: 102, PartType: 104, ID: 103, State: 105, Offset: 106, Value: []byte{107, 108, 109}},
-	{RecordType: 102, PartType: 104, ID: 113, State: 115, Offset: 116, Value: []byte{117, 118, 119}},
-	{RecordType: 102, PartType: 124, ID: 113, State: 125, Offset: 126, Value: []byte{127, 128, 129}},
+	{RecordType: 102, ID: 103, PartType: 104, State: 105, Offset: 106, Value: []byte{107, 108, 109}},
+	{RecordType: 102, ID: 113, PartType: 104, State: 115, Offset: 116, Value: []byte{117, 118, 119}},
+	{RecordType: 102, ID: 113, PartType: 124, State: 125, Offset: 126, Value: []byte{127, 128, 129}},
 }
 
+// Different record types
 var source3 = []Record{
-	{RecordType: 202, PartType: 204, ID: 203, State: 205, Offset: 206, Value: []byte{207, 208, 209}},
-	{RecordType: 201, PartType: 204, ID: 213, State: 215, Offset: 216, Value: []byte{217, 118, 219}},
-	{RecordType: 201, PartType: 224, ID: 213, State: 225, Offset: 226, Value: []byte{227, 128, 229}},
+	{RecordType: 202, ID: 203, PartType: 204, State: 205, Offset: 206, Value: []byte{207, 208, 209}},
+	{RecordType: 201, ID: 213, PartType: 204, State: 215, Offset: 216, Value: []byte{217, 118, 219}},
+	{RecordType: 201, ID: 213, PartType: 224, State: 225, Offset: 226, Value: []byte{227, 128, 229}},
+}
+
+// Different PartIDs
+var source4 = []Record{
+
+	{RecordType: 201, ID: 1203, PartType: 3204, PartID: 0, State: 205, Offset: 206, Value: []byte{207, 208, 209}},
+	{RecordType: 201, ID: 1203, PartType: 3204, PartID: 1, State: 215, Offset: 216, Value: []byte{217, 118, 219}},
+	{RecordType: 201, ID: 1203, PartType: 3205, PartID: 0, State: 205, Offset: 206, Value: []byte{207, 208, 209}},
+	{RecordType: 201, ID: 1203, PartType: 3205, PartID: 1, State: 215, Offset: 216, Value: []byte{217, 118, 219}},
+
+	{RecordType: 201, ID: 1204, PartType: 2204, PartID: 10, State: 205, Offset: 206, Value: []byte{207, 208, 209}},
+	{RecordType: 201, ID: 1204, PartType: 2204, PartID: 11, State: 215, Offset: 216, Value: []byte{217, 118, 219}},
+	{RecordType: 201, ID: 1204, PartType: 2204, PartID: 12, State: 225, Offset: 226, Value: []byte{217, 118, 219}},
+	{RecordType: 201, ID: 1204, PartType: 2205, PartID: 0, State: 205, Offset: 206, Value: []byte{207, 208, 209}},
+	{RecordType: 201, ID: 1204, PartType: 2205, PartID: 1, State: 215, Offset: 216, Value: []byte{217, 118, 219}},
+	{RecordType: 201, ID: 1204, PartType: 2205, PartID: 2, State: 225, Offset: 226, Value: []byte{217, 118, 219}},
 }
 
 // TestImpl s.e.
@@ -42,11 +61,12 @@ func TestImpl(actx context.Context, t *testing.T) {
 
 	ctx = actx
 
-	t.Run("TestBasicUsage", testBasicUsage)
+	t.Run("testBasicUsage", testBasicUsage)
 	t.Run("TestOrder", testOrder)
-	t.Run("TestRecordTypeFiltering", testFilteringRecordType)
-	t.Run("TestWsFiltering", testFilteringWs)
-	t.Run("TestCancelByErr", testCancelByErr)
+	t.Run("testOrderPartID", testOrderPartID)
+	t.Run("testFilteringRecordType", testFilteringRecordType)
+	t.Run("testFilteringWs", testFilteringWs)
+	t.Run("testCancelByErr", testCancelByErr)
 
 }
 
@@ -62,9 +82,16 @@ func pid(ID int64) *int64 {
 	return &ID
 }
 
+var wsID = int64(0)
+
+func newWsID() int64 {
+	wsID++
+	return wsID
+}
+
 func testBasicUsage(t *testing.T) {
 
-	const WsID = 1
+	WsID := newWsID()
 
 	require.Nil(t, Put(ctx, WsID, source1[0:1]))
 
@@ -94,7 +121,7 @@ func testOrder(t *testing.T) {
 
 	// Result must be sorted by workspaceID, recordType, ID, PartType
 
-	const WsID = 2
+	WsID := newWsID()
 
 	// Insert in reverse order
 
@@ -115,8 +142,23 @@ func testOrder(t *testing.T) {
 
 }
 
+func testOrderPartID(t *testing.T) {
+	// Result must be sorted by ID, PartType, PartID
+
+	WsID := newWsID()
+
+	for i := len(source4) - 1; i >= 0; i-- {
+		err := Put(ctx, WsID, source4[i:i+1])
+		require.Nil(t, err)
+	}
+
+	actual, err := ToSlice(Get(ctx, WsID, 201, nil, nil))
+	require.Nil(t, err, "Get error")
+	assert.True(t, reflect.DeepEqual(source4, actual), "Expected %#v Actual %#v", source4, actual)
+}
+
 func testFilteringRecordType(t *testing.T) {
-	const WsID = 3
+	WsID := newWsID()
 
 	require.Nil(t, Put(ctx, WsID, source3))
 	{
@@ -134,7 +176,7 @@ func testFilteringRecordType(t *testing.T) {
 }
 
 func testFilteringWs(t *testing.T) {
-	const WsID = 4
+	WsID := newWsID()
 
 	require.Nil(t, Put(ctx, WsID, source1))
 	require.Nil(t, Put(ctx, WsID+1, source2))
@@ -164,7 +206,7 @@ func testFilteringWs(t *testing.T) {
 // Get must analyze ctx.Err AFTER each write to channel
 func testCancelByErr(t *testing.T) {
 
-	const WsID = 5
+	WsID := newWsID()
 
 	ctxCancel, cancel := context.WithCancel(ctx)
 
