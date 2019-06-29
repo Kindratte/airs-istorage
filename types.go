@@ -9,10 +9,21 @@ package istorage
 
 // Record used by Put
 type Record struct {
+
+	// Record itself
+
 	RecordType int32
 	ID         int64
-	PartType   int32
-	PartID     int64
+
+	// Parent
+
+	ParentType int32
+	ParentID   int64
+
+	// Part
+
+	PartType int32
+	PartID   int64
 
 	// Offset of the event which affected the value
 	Offset int64

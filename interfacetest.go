@@ -67,19 +67,8 @@ func TestImpl(actx context.Context, t *testing.T) {
 	t.Run("testFilteringRecordType", testFilteringRecordType)
 	t.Run("testFilteringWs", testFilteringWs)
 	t.Run("testCancelByErr", testCancelByErr)
+	t.Run("testParent", testParent)
 
-}
-
-func ids(ID int64) []int64 {
-	return []int64{ID}
-}
-
-func ids2(ID int64) ([]int64, []int32) {
-	return []int64{ID}, nil
-}
-
-func pid(ID int64) *int64 {
-	return &ID
 }
 
 var wsID = int64(0)
@@ -165,6 +154,23 @@ func testOrderPartID(t *testing.T) {
 	actual, err := ToSlice(Get(ctx, WsID, 201, nil, nil))
 	require.Nil(t, err, "Get error")
 	assert.True(t, reflect.DeepEqual(source4, actual), "Expected %#v Actual %#v", source4, actual)
+}
+
+func testParent(t *testing.T) {
+
+	// Parent fields must be handled
+
+	WsID := newWsID()
+
+	r1 := Record{RecordType: 2, ID: 3, ParentType: 4, ParentID: 5}
+	r2 := Record{RecordType: 2, ID: 13, ParentType: 14, ParentID: 15}
+	source := []Record{r1, r2}
+
+	require.Nil(t, Put(ctx, WsID, source))
+
+	actual, err := ToSlice(Get(ctx, WsID, 2, nil, nil))
+	require.Nil(t, err, "Get error")
+	assert.True(t, reflect.DeepEqual(source, actual), "Expected %#v Actual %#v", source, actual)
 }
 
 func testFilteringRecordType(t *testing.T) {
