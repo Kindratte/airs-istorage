@@ -162,8 +162,8 @@ func testParent(t *testing.T) {
 
 	WsID := newWsID()
 
-	r1 := Record{RecordType: 2, ID: 3, ParentType: 4, ParentID: 5}
-	r2 := Record{RecordType: 2, ID: 13, ParentType: 14, ParentID: 15}
+	r1 := Record{RecordType: 2, ID: 3, ParentType: 4, ParentID: 5, DocType: 6, DocID: 7}
+	r2 := Record{RecordType: 2, ID: 13, ParentType: 14, ParentID: 15, DocType: 16, DocID: 17}
 	source := []Record{r1, r2}
 
 	require.Nil(t, Put(ctx, WsID, source))

@@ -15,6 +15,11 @@ type Record struct {
 	RecordType int32
 	ID         int64
 
+	// Document
+
+	DocType int32
+	DocID   int64
+
 	// Parent
 
 	ParentType int32
