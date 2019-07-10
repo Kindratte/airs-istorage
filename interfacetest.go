@@ -14,6 +14,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+	"github.com/untillpro/godif"
 )
 
 var ctx context.Context
@@ -53,6 +54,12 @@ var source4 = []Record{
 	{RecordType: 201, ID: 1204, PartType: 2205, PartID: 0, State: 205, Offset: 206, Value: []byte{207, 208, 209}},
 	{RecordType: 201, ID: 1204, PartType: 2205, PartID: 1, State: 215, Offset: 216, Value: []byte{217, 118, 219}},
 	{RecordType: 201, ID: 1204, PartType: 2205, PartID: 2, State: 225, Offset: 226, Value: []byte{217, 118, 219}},
+}
+
+// DeclareForTest s.e.
+func DeclareForTest() {
+	godif.Require(&Get)
+	godif.Require(&Put)
 }
 
 // TestImpl s.e.
