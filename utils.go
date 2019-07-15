@@ -19,28 +19,7 @@ func ToSlice(records <-chan Record, perr *error) ([]Record, error) {
 // Records returned by ToRecords
 type Records []Record
 
-// GetPart returns first part by type or nil if part not found
-func (rr Records) GetPart(partType int32) *Record {
-	for _, r := range rr {
-		if r.PartType == partType {
-			return &r
-		}
-	}
-	return nil
-}
-
-// GetParts returns all parts by type or nil if part not found
-func (rr Records) GetParts(partType int32) []Record {
-	var res []Record
-	for _, r := range rr {
-		if r.PartType == partType {
-			res = append(res, r)
-		}
-	}
-	return res
-}
-
-// ToRecords s.e.
+// ToRecords groups values of `records` channel by ID and produces channel of Records
 func ToRecords(records chan Record) chan Records {
 
 	res := make(chan Records)
@@ -68,5 +47,26 @@ func ToRecords(records chan Record) chan Records {
 		}
 		close(res)
 	}()
+	return res
+}
+
+// GetPart returns first part by type or nil if part not found
+func (rr Records) GetPart(partType int32) *Record {
+	for _, r := range rr {
+		if r.PartType == partType {
+			return &r
+		}
+	}
+	return nil
+}
+
+// GetParts returns all parts by type or nil if part not found
+func (rr Records) GetParts(partType int32) []Record {
+	var res []Record
+	for _, r := range rr {
+		if r.PartType == partType {
+			res = append(res, r)
+		}
+	}
 	return res
 }

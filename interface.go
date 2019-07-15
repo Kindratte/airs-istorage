@@ -19,5 +19,7 @@ var Put func(ctx context.Context, workspaceID int64, batch []Record) error
 - If IDs is not empty and partTypes is not empty result is filtered by IDs and partTypes
 - Get must analyze ctx.Err AFTER each write to channel
 - *perr will be valid when chan is closed
+- `Get` is intended for fast reading, Cassandra implementation must use CL=1
+
 */
 var Get func(ctx context.Context, workspaceID int64, recordType int32, IDs []int64, partTypes []int32) (res <-chan Record, perr *error)
