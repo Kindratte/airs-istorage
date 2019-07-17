@@ -20,7 +20,7 @@ func ToSlice(records <-chan Record, perr *error) ([]Record, error) {
 type Records []Record
 
 // ToRecords groups values of `records` channel by ID and produces channel of Records
-func ToRecords(records chan Record) chan Records {
+func ToRecords(records <-chan Record) <-chan Records {
 
 	res := make(chan Records)
 

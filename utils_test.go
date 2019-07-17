@@ -64,7 +64,8 @@ func Test_ToRecords(t *testing.T) {
 
 	// Empty channel
 	{
-		cRecord := make(chan Record)
+		cWriteRecord := make(chan Record)
+		cRecord := (<-chan Record)(cWriteRecord)
 		done := make(chan string)
 		var actual []Records
 		go func() {
@@ -75,14 +76,15 @@ func Test_ToRecords(t *testing.T) {
 			}
 			done <- "done"
 		}()
-		close(cRecord)
+		close(cWriteRecord)
 		<-done
 		require.Equal(t, 0, len(actual))
 	}
 
 	// One record
 	{
-		cRecord := make(chan Record)
+		cWriteRecord := make(chan Record)
+		cRecord := (<-chan Record)(cWriteRecord)
 		done := make(chan string)
 		var actual []Records
 		go func() {
@@ -93,8 +95,8 @@ func Test_ToRecords(t *testing.T) {
 			}
 			done <- "done"
 		}()
-		cRecord <- Record{RecordType: 1, ID: 0, PartType: 1}
-		close(cRecord)
+		cWriteRecord <- Record{RecordType: 1, ID: 0, PartType: 1}
+		close(cWriteRecord)
 		<-done
 		require.Equal(t, 1, len(actual))
 	}
@@ -104,7 +106,8 @@ func Test_ToRecords(t *testing.T) {
 func Test_ToRecordsTwoRecords(t *testing.T) {
 	// Two records, same ID
 	{
-		cRecord := make(chan Record)
+		cWriteRecord := make(chan Record)
+		cRecord := (<-chan Record)(cWriteRecord)
 		done := make(chan string)
 		var actual []Records
 		go func() {
@@ -115,16 +118,17 @@ func Test_ToRecordsTwoRecords(t *testing.T) {
 			}
 			done <- "done"
 		}()
-		cRecord <- Record{RecordType: 1, ID: 0, PartType: 1}
-		cRecord <- Record{RecordType: 1, ID: 0, PartType: 2}
-		close(cRecord)
+		cWriteRecord <- Record{RecordType: 1, ID: 0, PartType: 1}
+		cWriteRecord <- Record{RecordType: 1, ID: 0, PartType: 2}
+		close(cWriteRecord)
 		<-done
 		require.Equal(t, 1, len(actual))
 	}
 
 	// Two records, dif ID
 	{
-		cRecord := make(chan Record)
+		cWriteRecord := make(chan Record)
+		cRecord := (<-chan Record)(cWriteRecord)
 		done := make(chan string)
 		var expected []Records
 		expected = append(expected, Records{Record{RecordType: 1, ID: 0, PartType: 1}})
@@ -138,9 +142,9 @@ func Test_ToRecordsTwoRecords(t *testing.T) {
 			}
 			done <- "done"
 		}()
-		cRecord <- Record{RecordType: 1, ID: 0, PartType: 1}
-		cRecord <- Record{RecordType: 1, ID: 1, PartType: 2}
-		close(cRecord)
+		cWriteRecord <- Record{RecordType: 1, ID: 0, PartType: 1}
+		cWriteRecord <- Record{RecordType: 1, ID: 1, PartType: 2}
+		close(cWriteRecord)
 		<-done
 		assert.True(t, reflect.DeepEqual(expected, actual), "Expected %#v actual %#v", expected, actual)
 	}
@@ -150,7 +154,8 @@ func Test_ToRecordsTwoRecords(t *testing.T) {
 func Test_ToRecordsSixRecords(t *testing.T) {
 	// 6 records, 3 - 1 - 2
 	{
-		cRecord := make(chan Record)
+		cWriteRecord := make(chan Record)
+		cRecord := (<-chan Record)(cWriteRecord)
 		done := make(chan string)
 		var expected []Records
 		expected = append(expected,
@@ -177,13 +182,13 @@ func Test_ToRecordsSixRecords(t *testing.T) {
 			}
 			done <- "done"
 		}()
-		cRecord <- expected[0][0]
-		cRecord <- expected[0][1]
-		cRecord <- expected[0][2]
-		cRecord <- expected[1][0]
-		cRecord <- expected[2][0]
-		cRecord <- expected[2][1]
-		close(cRecord)
+		cWriteRecord <- expected[0][0]
+		cWriteRecord <- expected[0][1]
+		cWriteRecord <- expected[0][2]
+		cWriteRecord <- expected[1][0]
+		cWriteRecord <- expected[2][0]
+		cWriteRecord <- expected[2][1]
+		close(cWriteRecord)
 		<-done
 		require.Equal(t, 3, len(actual))
 		assert.True(t, reflect.DeepEqual(expected, actual), "Expected %#v actual %#v", expected, actual)
@@ -193,7 +198,8 @@ func Test_ToRecordsSixRecords(t *testing.T) {
 func Test_ToSlice(t *testing.T) {
 	// Empty channel
 	{
-		cRecord := make(chan Record)
+		cWriteRecord := make(chan Record)
+		cRecord := (<-chan Record)(cWriteRecord)
 		done := make(chan string)
 		var actual []Record
 		var errExpected error
@@ -203,7 +209,7 @@ func Test_ToSlice(t *testing.T) {
 			actual, errActual = ToSlice(cRecord, &errExpected)
 			done <- "done"
 		}()
-		close(cRecord)
+		close(cWriteRecord)
 		<-done
 		require.Equal(t, 0, len(actual))
 		require.Equal(t, errExpected, errActual)
@@ -211,7 +217,8 @@ func Test_ToSlice(t *testing.T) {
 
 	// Empty channel with error
 	{
-		cRecord := make(chan Record)
+		cWriteRecord := make(chan Record)
+		cRecord := (<-chan Record)(cWriteRecord)
 		done := make(chan string)
 
 		var actual []Record
@@ -223,7 +230,7 @@ func Test_ToSlice(t *testing.T) {
 			actual, errActual = ToSlice(cRecord, &errExpected)
 			done <- "done"
 		}()
-		close(cRecord)
+		close(cWriteRecord)
 		<-done
 		require.Equal(t, 0, len(actual))
 		require.Equal(t, errExpected, errActual)
