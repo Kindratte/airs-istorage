@@ -4,7 +4,6 @@ import "context"
 
 // PutEvents batch of events
 // Transaction is not needed (so only some records can be written)
-// Offset1 MUST start from zero
 // Offset1 MUST monotonically increase
 // If it is not GetEvents may stop on first missed number
 var PutEvents func(ctx context.Context, WSID int64, batch []Event) (err error)
