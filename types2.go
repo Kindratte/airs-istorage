@@ -11,6 +11,7 @@ package istorage
 type Event struct {
 	Offset1  int64
 	Offset2  int64
+	WSID     int64
 	Domain   int32
 	Type     int32
 	Data     []byte

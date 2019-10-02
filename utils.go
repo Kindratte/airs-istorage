@@ -16,6 +16,15 @@ func ToSlice(records <-chan Record, perr *error) ([]Record, error) {
 	return res, *perr
 }
 
+// ToEventSlice converts chan Event to []Event
+func ToEventSlice(records <-chan Event, perr *error) ([]Event, error) {
+	var res []Event
+	for r := range records {
+		res = append(res, r)
+	}
+	return res, *perr
+}
+
 // Records returned by ToRecords
 type Records []Record
 
